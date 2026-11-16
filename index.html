@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Quién quiere ser docente IA? · El concurso para docentes</title>
+<meta name="description" content="12 preguntas para comprobar si usas bien la IA en clase. ¿Llegarás al nivel Pro?">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="¿Quién quiere ser docente IA? · El concurso para docentes">
+<meta property="og:description" content="12 preguntas para comprobar si usas bien la IA en clase. ¿Llegarás al nivel Pro?">
+<!-- Imagen para compartir: cuando tengas la dirección de Vercel, cambia "og-image.png" por la dirección completa,
+     por ejemplo https://tu-proyecto.vercel.app/og-image.png (WhatsApp necesita la dirección completa). -->
+<meta property="og:image" content="og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="¿Quién quiere ser docente IA? 12 preguntas, 4 niveles">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="og-image.png">
+<meta name="twitter:title" content="¿Quién quiere ser docente IA? · El concurso para docentes">
+<meta name="twitter:description" content="12 preguntas para comprobar si usas bien la IA en clase. ¿Llegarás al nivel Pro?">
+<meta name="theme-color" content="#070C24">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070C24;
+    --bg-2:#0E1640;
+    --panel:rgba(16,26,72,.72);
+    --bar:#111A46;
+    --bar-line:#3A4A95;
+    --ink:#F4F1E8;
+    --ink-soft:#B9BEDA;
+    --gold:#EDBE55;
+    --gold-2:#C99227;
+    --gold-soft:rgba(237,190,85,.16);
+    --ok:#2F9A63; --ok-line:#7FE0A6;
+    --ko:#B83A35; --ko-line:#FF9A8F;
+    --radius:18px;
+    --title:"Fredoka", "Nunito", ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+    --text:"Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--text);
+    color:var(--ink);
+    background:
+      radial-gradient(60% 45% at 50% 0%, rgba(120,150,255,.22) 0%, rgba(120,150,255,0) 70%),
+      radial-gradient(40% 60% at 0% 30%, rgba(90,110,230,.18) 0%, rgba(90,110,230,0) 70%),
+      radial-gradient(40% 60% at 100% 30%, rgba(90,110,230,.18) 0%, rgba(90,110,230,0) 70%),
+      radial-gradient(90% 60% at 50% 110%, #1A2563 0%, rgba(26,37,99,0) 70%),
+      var(--bg);
+    background-attachment:fixed;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  /* focos de plató */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      conic-gradient(from 168deg at 15% -10%, transparent 0deg, rgba(255,255,255,.07) 8deg, transparent 18deg),
+      conic-gradient(from 174deg at 85% -10%, transparent 0deg, rgba(255,255,255,.07) 10deg, transparent 20deg);
+    animation:sweep 9s ease-in-out infinite alternate;
+  }
+  @keyframes sweep{from{opacity:.55}to{opacity:1}}
+  header,main,footer,.toast{position:relative;z-index:1}
+  button{font:inherit;color:inherit}
+  a{color:var(--gold)}
+  .wrap{width:100%;max-width:640px;margin:0 auto;padding:0 16px}
+
+  /* ---------- Escalera de niveles ---------- */
+  .ladder{
+    position:sticky;top:0;z-index:20;
+    background:rgba(7,12,36,.88);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(237,190,85,.25);
+  }
+  .ladder .wrap{padding-top:10px;padding-bottom:10px}
+  .ladder-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+  .brand{font-family:var(--title);font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;letter-spacing:.2px;color:var(--gold)}
+  .top-right{display:flex;align-items:center;gap:10px}
+  .qcount{font-size:13px;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+  .mute{
+    width:36px;height:36px;border-radius:50%;border:1px solid var(--bar-line);background:var(--bar);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1;padding:0;
+  }
+  .mute:hover{border-color:var(--gold)}
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .lvl{display:flex;flex-direction:column;gap:5px}
+  .lvl-name{
+    font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+    color:#6F78A8;text-align:center;transition:color .3s, text-shadow .3s;
+  }
+  .lvl.active .lvl-name{color:var(--gold);text-shadow:0 0 12px rgba(237,190,85,.6)}
+  .lvl.done .lvl-name{color:var(--ink)}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+  .step{height:8px;border-radius:99px;background:#1C2658;transition:background .35s, transform .35s, box-shadow .35s}
+  .step.done{background:#8E98CC}
+  .step.current{background:var(--gold);transform:scaleY(1.35);box-shadow:0 0 10px rgba(237,190,85,.8)}
+  .step.failed{background:var(--ko)}
+
+  main{flex:1;padding:22px 0 30px}
+  .screen{display:none}
+  .screen.show{display:block;animation:fadeUp .4s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .card{
+    background:var(--panel);border:1px solid rgba(237,190,85,.28);border-radius:var(--radius);
+    padding:22px;box-shadow:0 20px 50px -25px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.06);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  }
+  h1,h2,h3{font-family:var(--title);font-weight:600;line-height:1.2;margin:0}
+
+  /* ---------- Inicio ---------- */
+  .hero{text-align:center;padding:30px 6px 8px}
+  .hero-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #22307A, #0B1234 70%);
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 8px rgba(237,190,85,.12), 0 0 40px rgba(237,190,85,.35);
+    margin-bottom:24px;
+    animation:glow 2.8s ease-in-out infinite;
+  }
+  @keyframes glow{50%{box-shadow:0 0 0 10px rgba(237,190,85,.18), 0 0 60px rgba(237,190,85,.5)}}
+  .hero h1{font-size:clamp(30px,8vw,46px);font-weight:700;margin-bottom:14px;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+  .hero h1 span{color:var(--gold);text-shadow:0 0 24px rgba(237,190,85,.45)}
+  .hero p{font-size:18px;color:var(--ink-soft);max-width:30ch;margin:0 auto 28px}
+  .fine{font-size:14px;color:var(--ink-soft);margin-top:16px;letter-spacing:.2px}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:56px;padding:14px 28px;border-radius:99px;border:2px solid transparent;
+    font-weight:800;font-size:17px;cursor:pointer;text-decoration:none;
+    transition:transform .12s, filter .2s, background .2s, box-shadow .2s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn:focus-visible,.ans:focus-visible,.joker:focus-visible,.mute:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .btn-primary{
+    background:linear-gradient(180deg, #F7D57E 0%, var(--gold) 45%, var(--gold-2) 100%);
+    color:#1A1405;box-shadow:0 0 0 1px rgba(255,230,160,.5) inset, 0 10px 28px -10px rgba(237,190,85,.8);
+  }
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-ghost{background:rgba(255,255,255,.03);border-color:rgba(244,241,232,.55);color:var(--ink)}
+  .btn-ghost:hover{background:rgba(255,255,255,.08)}
+  .btn-block{width:100%}
+
+  /* ---------- Pregunta ---------- */
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+  .pill{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+    padding:6px 12px;border-radius:99px;background:var(--gold-soft);color:var(--gold);border:1px solid rgba(237,190,85,.4);
+  }
+  .q-num{font-size:14px;color:var(--ink-soft);font-weight:600}
+  .question{
+    font-size:clamp(21px,5.4vw,26px);margin:6px 0 18px;padding:18px;text-align:center;
+    background:linear-gradient(180deg,#16215A,#0D1540);border:2px solid var(--bar-line);border-radius:16px;
+    box-shadow:0 0 30px -10px rgba(120,150,255,.5);
+  }
+
+  .jokers{display:flex;gap:10px;margin-bottom:18px}
+  .joker{
+    flex:1;min-height:48px;border-radius:99px;border:2px solid var(--gold);
+    background:rgba(237,190,85,.08);color:var(--gold);font-weight:800;font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 10px;
+    transition:background .2s, opacity .2s;
+  }
+  .joker:hover:not(:disabled){background:rgba(237,190,85,.2)}
+  .joker:disabled{opacity:.35;cursor:not-allowed;border-color:#5A6290;color:#8E95BE;text-decoration:line-through}
+  .joker .ico{font-size:17px;line-height:1}
+
+  .hint{
+    display:none;background:rgba(237,190,85,.1);border:1px solid rgba(237,190,85,.45);border-left:5px solid var(--gold);
+    border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:16px;
+  }
+  .hint.show{display:block;animation:fadeUp .3s ease both}
+  .hint strong{font-family:var(--title);font-weight:600;display:block;font-size:14px;color:var(--gold);margin-bottom:2px}
+
+  .answers{display:grid;gap:12px}
+  .ans{
+    display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+    min-height:64px;padding:12px 18px 12px 12px;border-radius:99px;
+    background:linear-gradient(180deg,#16215A,#0F1846);border:2px solid var(--bar-line);cursor:pointer;
+    font-size:17px;font-weight:600;line-height:1.35;color:var(--ink);
+    transition:background .25s, border-color .25s, opacity .3s, transform .12s, box-shadow .25s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .ans:hover:not(:disabled){border-color:var(--gold);box-shadow:0 0 18px -4px rgba(237,190,85,.55)}
+  .ans:active:not(:disabled){transform:scale(.985)}
+  .ans .letter{
+    flex:0 0 40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--title);font-weight:700;font-size:18px;
+    background:transparent;border:2px solid var(--gold);color:var(--gold);transition:background .25s,color .25s,border-color .25s;
+  }
+  .ans:disabled{cursor:default}
+  .ans.removed{opacity:.2;border-style:dashed;transform:scale(.97);transition:opacity .35s, transform .35s}
+  .ans.removed .txt{text-decoration:line-through}
+  .ans.chosen{
+    background:linear-gradient(180deg,#F7D57E,var(--gold) 50%,var(--gold-2));border-color:#FFE7A6;color:#1A1405;
+    box-shadow:0 0 28px rgba(237,190,85,.7);animation:pulse .75s ease-in-out infinite;
+  }
+  .ans.chosen .letter{background:#1A1405;border-color:#1A1405;color:var(--gold)}
+  @keyframes pulse{50%{box-shadow:0 0 42px rgba(237,190,85,.95)}}
+  .ans.correct{
+    background:linear-gradient(180deg,#46B97C,var(--ok));border-color:var(--ok-line);color:#fff;
+    box-shadow:0 0 30px rgba(80,210,140,.7);animation:flash .9s ease;
+  }
+  .ans.correct .letter{background:#fff;border-color:#fff;color:var(--ok)}
+  .ans.wrong{
+    background:linear-gradient(180deg,#D4524C,var(--ko));border-color:var(--ko-line);color:#fff;
+    box-shadow:0 0 26px rgba(230,80,70,.6);animation:shake .45s ease;
+  }
+  .ans.wrong .letter{background:#fff;border-color:#fff;color:var(--ko)}
+  .ans.dim{opacity:.4}
+  @keyframes flash{0%,40%,80%{filter:brightness(1.35)}20%,60%,100%{filter:brightness(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+
+  .feedback{display:none;margin-top:18px;border-radius:16px;padding:18px;border:1.5px solid}
+  .feedback.show{display:block;animation:fadeUp .35s ease both}
+  .feedback.ok{background:rgba(47,154,99,.16);border-color:var(--ok-line)}
+  .feedback.ko{background:rgba(184,58,53,.18);border-color:var(--ko-line)}
+  .feedback h3{font-size:22px;margin-bottom:6px}
+  .feedback.ok h3{color:var(--ok-line)}
+  .feedback.ko h3{color:var(--ko-line)}
+  .feedback p{margin:0 0 16px;font-size:16.5px}
+  .fb-actions{display:grid;gap:10px}
+
+  /* ---------- Aviso de nivel ---------- */
+  .toast{
+    position:fixed;left:50%;top:50%;z-index:50;
+    transform:translate(-50%,-50%) scale(.85);opacity:0;pointer-events:none;
+    background:radial-gradient(circle at 50% 0%, #22307A, #0B1234 80%);color:var(--ink);
+    border:2px solid var(--gold);border-radius:22px;padding:24px 28px;text-align:center;
+    font-family:var(--title);font-weight:600;font-size:23px;line-height:1.25;
+    box-shadow:0 0 60px rgba(237,190,85,.45), 0 20px 50px -15px rgba(0,0,0,.7);
+    width:min(88vw,380px);
+    transition:opacity .3s, transform .3s;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .toast .t-ico{display:block;font-size:32px;margin-bottom:6px}
+
+  /* ---------- Final ---------- */
+  .final-head{text-align:center;padding:10px 4px 22px}
+  .final-head .trophy{font-size:58px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 0 18px rgba(237,190,85,.6))}
+  .final-head h1{font-size:clamp(28px,7vw,40px);margin-bottom:10px;color:var(--gold);text-shadow:0 0 24px rgba(237,190,85,.4)}
+  .final-head p{font-size:17.5px;color:var(--ink-soft);margin:0 auto;max-width:34ch}
+  .final-head .btn{margin-top:18px}
+  .keys h2{font-size:21px;margin-bottom:14px;color:var(--gold)}
+  .keys ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .keys li{display:flex;gap:12px;align-items:center;font-size:16.5px;font-weight:600;background:var(--bar);border:1px solid var(--bar-line);border-radius:99px;padding:8px 14px 8px 8px}
+  .keys li b{
+    flex:0 0 32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:var(--gold);color:#1A1405;font-family:var(--title);font-weight:700;
+  }
+  .cta{margin-top:18px;text-align:center}
+  .cta > p{font-size:17px;margin:0 0 18px}
+  .cta .small{font-size:14px;color:var(--ink-soft);margin:10px 0 0}
+  .author{
+    margin-top:20px;padding-top:16px;border-top:1px solid rgba(237,190,85,.25);
+    font-size:15px;color:var(--ink-soft)
+  }
+  .author strong{color:var(--ink)}
+  .share{margin-top:14px}
+  .share-opts{display:none;gap:10px;margin-top:10px;grid-template-columns:1fr 1fr}
+  .share-opts.show{display:grid;animation:fadeUp .3s ease both}
+  .share-opts .btn{font-size:15px;min-height:50px;padding:10px 12px}
+  .copied{font-size:14px;color:var(--ok-line);min-height:20px;margin-top:6px}
+
+  /* ---------- Pie ---------- */
+  footer{border-top:1px solid rgba(237,190,85,.2);background:rgba(4,7,22,.85);font-size:14px;color:var(--ink-soft)}
+  footer .wrap{padding-top:18px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+  footer .row{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:8px}
+  footer a{color:var(--ink);font-weight:600}
+  footer .last{font-size:13px;margin:0}
+
+  @media (min-width:600px){
+    .card{padding:28px}
+    .fb-actions{grid-template-columns:1fr 1fr}
+    .fb-actions.single{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- Escalera de niveles: siempre visible -->
+<header class="ladder" aria-label="Progreso del concurso">
+  <div class="wrap">
+    <div class="ladder-top">
+      <span class="brand">¿Quién quiere ser docente IA?</span>
+      <span class="top-right"><span class="qcount" id="qcount">12 preguntas</span><button class="mute" id="mute" type="button" aria-label="Silenciar sonido" aria-pressed="false">🔊</button></span>
+    </div>
+    <div class="levels" id="levels"></div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- PANTALLA DE INICIO -->
+    <section class="screen show" id="s-start" aria-labelledby="t-start">
+      <div class="hero">
+        <div class="hero-badge" aria-hidden="true">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <path d="M22 5l4.6 9.6 10.4 1.4-7.6 7.3 1.9 10.4L22 28.7l-9.3 5 1.9-10.4L7 16l10.4-1.4L22 5z" fill="#EDBE55"/>
+          </svg>
+        </div>
+        <h1 id="t-start">¿Quién quiere ser <span>docente IA</span>?</h1>
+        <p>12 preguntas. 4 niveles. Un objetivo: demostrar que usas la IA en clase con cabeza. ¿Llegarás al nivel Pro?</p>
+        <button class="btn btn-primary" id="btn-start">Empezar el concurso</button>
+        <div class="fine">5 minutos · 2 comodines · sin registrarte</div>
+      </div>
+    </section>
+
+    <!-- PANTALLA DE PREGUNTA -->
+    <section class="screen" id="s-quiz" aria-labelledby="q-text">
+      <div class="card">
+        <div class="q-meta">
+          <span class="pill" id="q-level">Nivel Básico</span>
+          <span class="q-num" id="q-num">Pregunta 1 de 12</span>
+        </div>
+        <h2 class="question" id="q-text"></h2>
+
+        <div class="jokers" id="jokers">
+          <button class="joker" id="j-50" type="button" aria-label="Comodín 50 %: quita dos respuestas incorrectas">
+            <span class="ico" aria-hidden="true">½</span> 50 %
+          </button>
+          <button class="joker" id="j-hint" type="button" aria-label="Comodín Sala de profes: muestra una pista">
+            <span class="ico" aria-hidden="true">☕</span> Sala de profes
+          </button>
+        </div>
+
+        <div class="hint" id="hint" role="status"><strong>Sala de profes</strong><span id="hint-text"></span></div>
+
+        <div class="answers" id="answers" role="group" aria-labelledby="q-text"></div>
+
+        <div class="feedback" id="feedback" aria-live="polite">
+          <h3 id="fb-title"></h3>
+          <p id="fb-text"></p>
+          <div class="fb-actions" id="fb-actions"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA FINAL -->
+    <section class="screen" id="s-final" aria-labelledby="f-title">
+      <div class="final-head">
+        <div class="trophy" id="f-icon" aria-hidden="true">🏆</div>
+        <h1 id="f-title"></h1>
+        <p id="f-text"></p>
+        <button class="btn btn-ghost" id="f-replay">Volver a jugar</button>
+      </div>
+
+      <div class="card keys">
+        <h2>Las 5 claves del docente IA</h2>
+        <ol>
+          <li><b>1</b>Di para quién es.</li>
+          <li><b>2</b>Protege los datos del alumnado.</li>
+          <li><b>3</b>Revisa siempre lo que genera.</li>
+          <li><b>4</b>Dale ejemplos tuyos.</li>
+          <li><b>5</b>Automatiza lo repetitivo y revisa tú al final.</li>
+        </ol>
+      </div>
+
+      <div class="card cta" style="margin-top:16px">
+        <p>Esto es solo el principio. Estoy preparando un taller práctico para docentes que quieren usar la IA sin perder horas y sin riesgos.</p>
+        <a class="btn btn-primary btn-block"
+           href="https://docs.google.com/forms/d/1vu92_buRoj-6we7Dq5wrFr_pjxS89pNthvXJsv1Mi2M/viewform"
+           target="_blank" rel="noopener">Quiero apuntarme a la lista de espera</a>
+        <p class="small">Solo te escribiré para avisarte del taller.</p>
+
+        <div class="share">
+          <button class="btn btn-ghost btn-block" id="btn-share" aria-expanded="false" aria-controls="share-opts">Reta a un compañero</button>
+          <div class="share-opts" id="share-opts">
+            <button class="btn btn-ghost" id="btn-copy" type="button">Copiar enlace</button>
+            <a class="btn btn-ghost" id="btn-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+          <div class="copied" id="copied" role="status"></div>
+        </div>
+
+        <div class="author"><strong>Quién soy:</strong> María Galbis · Maestra de Primaria desde 2009</div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="assertive"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <a href="https://docs.google.com/document/d/1UKqIh_3V7O7jt0kzbMR4avutc9Iap60yc38hUmrPW9c/view" target="_blank" rel="noopener">Política de privacidad</a>
+      <span>Contacto: <a href="mailto:mariagalbis.ia@gmail.com">mariagalbis.ia@gmail.com</a></span>
+    </div>
+    <p class="last">Proyecto personal de María Galbis, creado durante su formación en IA. Sin actividad comercial.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var LEVELS = ["Básico","Intermedio","Avanzado","Pro"];
+  var LETTERS = ["A","B","C","D"];
+
+  // c = índice de la respuesta correcta (0=A, 1=B, 2=C, 3=D)
+  var QUESTIONS = [
+    { q:"¿Qué es un prompt?",
+      a:["Un programa que se instala","La instrucción que le das a la IA","Un tipo de archivo","Una contraseña"], c:1,
+      h:"Es lo que tú escribes en el chat.",
+      e:"Un prompt es la instrucción que le escribes a la IA. Cuanto mejor la escribas, mejor será el resultado." },
+    { q:"¿Qué dato no puede faltar en un prompt para pedir una ficha?",
+      a:["El curso y el nivel","Tu nombre","La fecha de hoy","«Por favor»"], c:0,
+      h:"Sin esto, la IA no sabe si es para 1.º o para 6.º.",
+      e:"Sin el curso, la IA no sabe el nivel. Di siempre para quién es." },
+    { q:"¿Qué no deberías escribir nunca en una IA?",
+      a:["«2.º de Primaria»","El tema de la unidad","El nombre y los datos de salud de un alumno","El número de preguntas"], c:2,
+      h:"Piensa en lo que nunca saldría del expediente.",
+      e:"Los nombres y los datos de salud del alumnado no se escriben en una IA. Usa «un alumno de 2.º»." },
+
+    { q:"¿Qué es una «alucinación» de la IA?",
+      a:["Cuando se bloquea","Cuando tarda en responder","Cuando responde en otro idioma","Cuando se inventa información que parece verdad"], c:3,
+      h:"Piensa en un alumno que se inventa la respuesta con mucha seguridad.",
+      e:"La IA puede inventarse datos, citas o palabras y decírtelos con total seguridad. Por eso hay que revisar." },
+    { q:"La IA te da una sopa de letras. ¿Qué haces antes de imprimirla?",
+      a:["Compruebo que las palabras están y que tiene solución","La imprimo directamente","Le pido que la haga más bonita","Nada, la IA no se equivoca"], c:0,
+      h:"La IA a veces dice que una palabra está… y no está.",
+      e:"La IA falla a menudo en sopas de letras y crucigramas. Revisa siempre antes de imprimir." },
+    { q:"¿Cuál es el mejor prompt?",
+      a:["«Hazme un dictado»","«Hazme un dictado bonito y divertido»","«Crea un dictado de 5 frases para 2.º de Primaria con palabras con BL. Letra grande»","«Dictado para mañana, rápido»"], c:2,
+      h:"Busca el que dice para quién, qué y cómo.",
+      e:"Un buen prompt dice para quién, qué, cuánto y en qué formato." },
+
+    { q:"La IA te da un dato para Conocimiento del Medio que no conocías. ¿Qué haces?",
+      a:["Lo copio tal cual","Lo compruebo en una fuente fiable","Le pregunto si está segura y me fío","Lo quito siempre, por si acaso"], c:1,
+      h:"La IA puede sonar muy segura… y equivocarse.",
+      e:"Preguntarle a la IA si está segura no basta. Compruébalo en el libro de texto o en una fuente oficial." },
+    { q:"Quieres que la IA escriba las circulares a las familias con tu estilo. ¿Qué es lo más útil?",
+      a:["Pedirle «escríbelo bien»","Escribir el prompt en mayúsculas","Repetir la misma petición varias veces","Darle ejemplos de circulares tuyas"], c:3,
+      h:"La IA imita mejor lo que ve que lo que le describes.",
+      e:"Con ejemplos tuyos, la IA copia tu tono. Describirlo con palabras funciona mucho peor." },
+    { q:"Quieres adaptar una lectura para un alumno con dificultades lectoras. ¿Qué prompt es el correcto?",
+      a:["«Adapta la lectura para Lucas, que tiene dislexia»","«Adapta esta lectura de 2.º para un alumno con dificultades lectoras: frases cortas, letra grande y vocabulario sencillo»","«Adapta la lectura»","«Haz la lectura más fácil para el niño de la tercera mesa»"], c:1,
+      h:"Describe lo que necesita, no quién es.",
+      e:"Describe la necesidad sin identificar al alumno. Así proteges sus datos y la IA sabe qué adaptar." },
+
+    { q:"Quieres que la IA te ayude a corregir redacciones con tu criterio. ¿Qué le das?",
+      a:["«Corrige estas redacciones»","«Corrígelas con una nota del 1 al 10»","Tu rúbrica y dos redacciones que ya has corregido tú, sin nombres, como ejemplo","Le pides que sea muy exigente"], c:2,
+      h:"La IA aprende tu criterio viendo cómo corriges tú.",
+      e:"Con tu rúbrica y ejemplos corregidos por ti, la IA aplica tu criterio y no uno inventado. Y sin nombres del alumnado." },
+    { q:"Cada semana le pides a la IA el mismo tipo de ficha y le explicas todo desde cero. ¿Qué es lo más eficaz?",
+      a:["Guardar tus instrucciones y tus ejemplos en un proyecto para no repetirlos","Pegar el mismo prompt cada viernes","Pedirle que se acuerde para siempre","Escribir un prompt más largo cada vez"], c:0,
+      h:"Piensa dónde se guarda lo que no quieres repetir.",
+      e:"En un proyecto guardas las instrucciones y los ejemplos una vez, y cada chat nuevo ya los tiene en cuenta." },
+    { q:"Cada viernes preparas 4 fichas, las guardas en Drive y avisas a las familias. ¿Qué es lo más inteligente?",
+      a:["Seguir haciéndolo todo a mano","Dejar que la IA lo haga todo y lo envíe sin mirarlo","Automatizar los pasos repetitivos y dejar la revisión final para ti","Dejar de mandar fichas"], c:2,
+      h:"La IA ayuda, pero la última palabra es tuya.",
+      e:"Automatiza lo repetitivo, pero revisa tú antes de que nada llegue a las familias." }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var state = { i:0, correct:0, used50:false, usedHint:false, locked:false, failed:false };
+
+  var $ = function(id){ return document.getElementById(id); };
+  var levelOf = function(i){ return Math.floor(i/3); };
+
+
+  // ---------- Sonido (generado en el navegador, sin archivos) ----------
+  var audioCtx = null, muted = false;
+  try { muted = localStorage.getItem("dia-muted") === "1"; } catch(e){}
+  function ac(){
+    if (!audioCtx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    return audioCtx;
+  }
+  function note(freq, start, dur, type, vol, endFreq){
+    var c = ac(); if (!c || muted) return;
+    var t = c.currentTime + start;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (endFreq) o.frequency.exponentialRampToValueAtTime(endFreq, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function soundCorrect(){
+    // arpegio ascendente y brillante
+    [523.25, 659.25, 783.99].forEach(function(f,i){ note(f, i*0.1, 0.25, "triangle", 0.22); });
+    note(1046.5, 0.3, 0.7, "triangle", 0.25);
+    note(1318.5, 0.3, 0.7, "sine", 0.10);
+  }
+  function soundWrong(){
+    // dos notas graves que caen
+    note(311.1, 0, 0.28, "sawtooth", 0.09, 293.7);
+    note(233.1, 0.3, 0.75, "sawtooth", 0.10, 196);
+    note(116.5, 0.3, 0.75, "sine", 0.18, 98);
+  }
+  function soundTick(){ note(880, 0, 0.08, "sine", 0.08); }
+  function paintMute(){
+    var b = $("mute");
+    b.textContent = muted ? "🔇" : "🔊";
+    b.setAttribute("aria-pressed", muted ? "true" : "false");
+    b.setAttribute("aria-label", muted ? "Activar sonido" : "Silenciar sonido");
+  }
+  $("mute").addEventListener("click", function(){
+    muted = !muted;
+    try { localStorage.setItem("dia-muted", muted ? "1" : "0"); } catch(e){}
+    paintMute();
+    if (!muted) soundTick();
+  });
+  paintMute();
+
+  // ---------- Escalera ----------
+  function buildLadder(){
+    var html = "";
+    for (var l=0; l<4; l++){
+      html += '<div class="lvl" data-l="'+l+'"><div class="lvl-name">'+LEVELS[l]+'</div><div class="steps">';
+      for (var s=0; s<3; s++){ html += '<span class="step" data-q="'+(l*3+s)+'"></span>'; }
+      html += '</div></div>';
+    }
+    $("levels").innerHTML = html;
+  }
+  function updateLadder(mode){
+    // mode: "start" | "quiz" | "final"
+    var steps = document.querySelectorAll(".step");
+    steps.forEach(function(st){
+      var q = +st.dataset.q;
+      st.className = "step";
+      if (mode === "start") return;
+      if (q < state.correct) st.classList.add("done");
+      else if (q === state.i && mode === "quiz") st.classList.add(state.failed ? "failed" : "current");
+      else if (q === state.i && state.failed) st.classList.add("failed");
+    });
+    document.querySelectorAll(".lvl").forEach(function(el){
+      var l = +el.dataset.l;
+      el.classList.remove("active","done");
+      if (mode === "start") return;
+      var cur = levelOf(state.i);
+      if (state.correct === TOTAL || l < cur) el.classList.add("done");
+      else if (l === cur) el.classList.add("active");
+    });
+    $("qcount").textContent = (mode === "quiz")
+      ? "Pregunta " + (state.i+1) + " de " + TOTAL
+      : (mode === "final" ? state.correct + " de " + TOTAL + " aciertos" : TOTAL + " preguntas");
+  }
+
+  // ---------- Pantallas ----------
+  function show(id){
+    ["s-start","s-quiz","s-final"].forEach(function(s){ $(s).classList.toggle("show", s === id); });
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function toast(text){
+    var t = $("toast");
+    t.innerHTML = '<span class="t-ico" aria-hidden="true">🔓</span>' + text;
+    t.classList.add("show");
+    setTimeout(function(){ t.classList.remove("show"); }, 1900);
+  }
+
+  // ---------- Juego ----------
+  function startGame(){
+    ac();
+    state = { i:0, correct:0, used50:false, usedHint:false, locked:false, failed:false };
+    $("j-50").disabled = false;
+    $("j-hint").disabled = false;
+    $("copied").textContent = "";
+    show("s-quiz");
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    var Q = QUESTIONS[state.i];
+    state.locked = false;
+    $("q-level").textContent = "Nivel " + LEVELS[levelOf(state.i)];
+    $("q-num").textContent = "Pregunta " + (state.i+1) + " de " + TOTAL;
+    $("q-text").textContent = Q.q;
+    $("hint").classList.remove("show");
+    $("hint-text").textContent = Q.h;
+    $("feedback").className = "feedback";
+    $("jokers").style.display = "";
+    $("j-50").disabled = state.used50;
+    $("j-hint").disabled = state.usedHint;
+
+    var box = $("answers");
+    box.innerHTML = "";
+    Q.a.forEach(function(txt, k){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "ans";
+      b.dataset.k = k;
+      b.innerHTML = '<span class="letter" aria-hidden="true">'+LETTERS[k]+'</span><span class="txt"></span>';
+      b.querySelector(".txt").textContent = txt;
+      b.setAttribute("aria-label", LETTERS[k] + ": " + txt);
+      b.addEventListener("click", function(){ answer(k, b); });
+      box.appendChild(b);
+    });
+    updateLadder("quiz");
+    $("q-text").setAttribute("tabindex","-1");
+    $("q-text").focus({preventScroll:true});
+  }
+
+  function answer(k, btn){
+    if (state.locked) return;
+    state.locked = true;
+    var Q = QUESTIONS[state.i];
+    var all = document.querySelectorAll(".ans");
+    all.forEach(function(b){ b.disabled = true; });
+    btn.classList.add("chosen");
+    soundTick();
+    $("j-50").disabled = true; $("j-hint").disabled = true;
+
+    // breve suspense con la respuesta elegida en terracota
+    setTimeout(function(){
+      btn.classList.remove("chosen");
+      var ok = (k === Q.c);
+      all.forEach(function(b){
+        var kk = +b.dataset.k;
+        if (kk === Q.c) b.classList.add("correct");
+        else if (kk === k) b.classList.add("wrong");
+        else b.classList.add("dim");
+      });
+      $("jokers").style.display = "none";
+      if (ok){ soundCorrect(); onCorrect(Q); } else { soundWrong(); onWrong(Q); }
+    }, 1400);
+  }
+
+  function onCorrect(Q){
+    state.correct++;
+    updateLadder("quiz");
+    var last = state.i === TOTAL - 1;
+    var fb = $("feedback");
+    fb.className = "feedback ok show";
+    $("fb-title").textContent = "¡Correcto!";
+    $("fb-text").textContent = Q.e;
+    var act = $("fb-actions");
+    act.className = "fb-actions single";
+    act.innerHTML = "";
+    var next = document.createElement("button");
+    next.className = "btn btn-primary btn-block";
+    next.textContent = last ? "Ver mi resultado" : "Siguiente pregunta";
+    next.addEventListener("click", function(){
+      if (last){ showFinal(); return; }
+      var prevLevel = levelOf(state.i);
+      state.i++;
+      renderQuestion();
+      if (levelOf(state.i) !== prevLevel){
+        toast("¡Nivel " + LEVELS[levelOf(state.i)] + " desbloqueado!");
+      }
+    });
+    act.appendChild(next);
+    fb.scrollIntoView({behavior:"smooth", block:"nearest"});
+    next.focus({preventScroll:true});
+  }
+
+  function onWrong(Q){
+    state.failed = true;
+    updateLadder("quiz");
+    var fb = $("feedback");
+    fb.className = "feedback ko show";
+    $("fb-title").textContent = "Respuesta incorrecta";
+    $("fb-text").textContent = "La respuesta correcta era la " + LETTERS[Q.c] + ". " + Q.e;
+    var act = $("fb-actions");
+    act.className = "fb-actions";
+    act.innerHTML = "";
+    var res = document.createElement("button");
+    res.className = "btn btn-primary";
+    res.textContent = "Ver mi resultado";
+    res.addEventListener("click", showFinal);
+    var again = document.createElement("button");
+    again.className = "btn btn-ghost";
+    again.textContent = "Volver a jugar";
+    again.addEventListener("click", startGame);
+    act.appendChild(res); act.appendChild(again);
+    fb.scrollIntoView({behavior:"smooth", block:"nearest"});
+    res.focus({preventScroll:true});
+  }
+
+  function showFinal(){
+    var win = state.correct === TOTAL;
+    if (win){
+      $("f-icon").textContent = "🏆";
+      $("f-title").textContent = "¡Eres docente IA!";
+      $("f-text").textContent = "Has superado los 4 niveles. Usas la IA con cabeza: sabes pedir, revisar y proteger los datos de tu alumnado.";
+    } else {
+      $("f-icon").textContent = "⭐";
+      $("f-title").textContent = "¡Has llegado al nivel " + LEVELS[levelOf(state.i)] + "!";
+      $("f-text").textContent = (state.correct === 0)
+        ? "Has acertado 0 de 12. Todo el mundo empieza por aquí: con las 5 claves de abajo, la próxima partida irá mucho mejor."
+        : "Has acertado " + state.correct + " de 12. Buen comienzo: con un poco de práctica, el nivel Pro está a tu alcance.";
+    }
+    $("share-opts").classList.remove("show");
+    $("btn-share").setAttribute("aria-expanded","false");
+    show("s-final");
+    updateLadder("final");
+  }
+
+  // ---------- Comodines ----------
+  $("j-50").addEventListener("click", function(){
+    if (state.used50 || state.locked) return;
+    state.used50 = true;
+    this.disabled = true;
+    var Q = QUESTIONS[state.i];
+    var wrong = [0,1,2,3].filter(function(k){ return k !== Q.c; });
+    wrong.sort(function(){ return Math.random() - .5; });
+    wrong.slice(0,2).forEach(function(k){
+      var b = document.querySelector('.ans[data-k="'+k+'"]');
+      b.classList.add("removed"); b.disabled = true; b.setAttribute("aria-hidden","true");
+    });
+  });
+  $("j-hint").addEventListener("click", function(){
+    if (state.usedHint || state.locked) return;
+    state.usedHint = true;
+    this.disabled = true;
+    $("hint").classList.add("show");
+  });
+
+  // ---------- Compartir ----------
+  var SHARE_TEXT = "¿Quién quiere ser docente IA? 12 preguntas para comprobar si usas bien la IA en clase. ¿Llegarás al nivel Pro?";
+  function pageUrl(){ return location.href.split("#")[0]; }
+
+  $("btn-share").addEventListener("click", function(){
+    var opts = $("share-opts");
+    var open = !opts.classList.contains("show");
+    opts.classList.toggle("show", open);
+    this.setAttribute("aria-expanded", open ? "true" : "false");
+    $("btn-wa").href = "https://wa.me/?text=" + encodeURIComponent(SHARE_TEXT + " " + pageUrl());
+  });
+
+  $("btn-copy").addEventListener("click", function(){
+    var url = pageUrl();
+    if (location.protocol === "file:"){
+      $("copied").textContent = "El enlace se podrá copiar cuando la página esté publicada.";
+      return;
+    }
+    var done = function(){ $("copied").textContent = "¡Enlace copiado! Pégalo donde quieras."; };
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(url).then(done, function(){ fallbackCopy(url); done(); });
+    } else { fallbackCopy(url); done(); }
+  });
+  function fallbackCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // ---------- Inicio ----------
+  $("btn-start").addEventListener("click", startGame);
+  $("f-replay").addEventListener("click", startGame);
+  buildLadder();
+  updateLadder("start");
+})();
+</script>
+</body>
+</html>
